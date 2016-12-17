@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
+    ICollection<Tile> neighbors = new List<Tile>();
 
     public Occupant occupant
     {//TODO
@@ -44,7 +45,9 @@ public class Tile : MonoBehaviour {
     //Called on initialization
     public void addNeighbor(Tile neighbor)
     {
-        //TODO
+        if(!neighbors
+            .Contains(neighbor))
+        neighbors.Add(neighbor);
     }
 
 
