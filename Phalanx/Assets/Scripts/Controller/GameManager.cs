@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using Olympus.Phalanx.Map;
+using System;
 
 namespace Olympus.Phalanx.Controller
 {
     public class GameManager : MonoBehaviour
     {
         private static GameManager _instance;
+
+        private GameInfo gameInfo;
+        private GameState active;
+        private Dictionary<int, GameState> gameStates;
+
+        private MapManager mapManager;
+
 
         public static GameManager instance
         {
@@ -25,40 +34,63 @@ namespace Olympus.Phalanx.Controller
             {
                 Destroy(this);
             }
+            initializeMap();
+            initializeGameStates();
         }
 
-        // Update is called once per frame
-        void Update()
+
+        private void initializeMap()
         {
-
+            if (mapManager == null)
+            {
+                mapManager = gameObject.AddComponent<MapManager>();
+            }
         }
 
-        public void mapTileClicked(Map.Tile tile)
+        private void initializeGameStates()
         {
-            //TODO
-            //This will probably be where most of the game logic will occur.
+            if (gameStates == null)
+            {
+                gameInfo = new GameInfo(this);
+                gameStates = new Dictionary<int, GameState>(1);
+                gameStates.Add(1, new GameStateMove(gameInfo));
+                active = gameStates[1];
+            }
         }
 
-        #region Button Clicks
-        public void infoOptionClicked()
+        private class GameInfo : IGame
         {
-            //TODO
+            private GameManager parent { get; set; }
+            internal GameInfo(GameManager parent)
+            {
+                this.parent = parent;
+            }
+            public int activePlayer
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public MapManager mapManager
+            {
+                get
+                {
+                    return parent.mapManager;
+                }
+            }
         }
 
-        public void selectOptionClicked()
+        public void tileClick(Tile clickedTile, Map.TileClickEventArgs args)
         {
-            //TODO
+            active.tileClick(clickedTile, args);
         }
 
-        public void moveOptionClicked()
-        {
-            //TODO
-        }
-
-        public void attackOptionClicked()
-        {
-            //TODO
-        }
-        #endregion
     }
 }
