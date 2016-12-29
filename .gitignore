@@ -29,4 +29,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-# Temp test files
+# Folder for holding test files.
+testingScripts
+testingScripts/
