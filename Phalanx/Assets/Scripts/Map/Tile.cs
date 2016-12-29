@@ -8,8 +8,7 @@ namespace Olympus.Phalanx.Map
 
     public class Tile : MonoBehaviour
     {
-        //NOTE: All my changes to tile are temporary for me to test, except for enterTile, though feel free to change as
-        //see fit.
+       
         bool this[Tile neighbor]
         {
             get

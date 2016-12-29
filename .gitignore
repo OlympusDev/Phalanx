@@ -31,4 +31,5 @@ sysinfo.txt
 
 # Folder for holding test files.
 testingScripts
+testingScripts.meta
 testingScripts/
