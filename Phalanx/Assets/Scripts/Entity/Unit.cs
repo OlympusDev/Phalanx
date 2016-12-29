@@ -9,10 +9,9 @@ namespace Olympus.Phalanx.Entity
     {
         //need time since last moved.
         //Need destination Tile .
-
+        private Tile occupying;
         private float timeStartedMovement;
         private float distanceToNextTile;
-        private bool canMove;
         // Use this for initialization
         void Start()
         {
@@ -21,52 +20,47 @@ namespace Olympus.Phalanx.Entity
         // Update is called once per frame
         void Update()
         {
-            if (canMove)
+            if (target != null)
                 move();
         }
 
         public void move()
         {
-            //Why does is it giving me null reference? I break pointed to it and clearly is there and correct val
-            if (transform.position != destination.transform.position)
+            if (transform.position != target.transform.position)
             {
                 Debug.Log("Moving");
                 float timeSinceLastMovement = Time.time - timeStartedMovement;
-                float distanceToMovePerFrame = timeSinceLastMovement / distanceToNextTile;
-                transform.position = Vector3.Lerp(tile.transform.position, destination.transform.position, distanceToMovePerFrame);
+                float fractionTravelled = timeSinceLastMovement / distanceToNextTile;
+                transform.position = Vector3.Lerp(tile.transform.position, target.transform.position, fractionTravelled);
             }
             else
             {
                 //Switch to currently occupying tile to this one
-                canMove = false;
-                selected = false;
+                //tile.selected = false;
                 tile.exitTile();
-                tile = destination;
-                destination = null;
+                tile = target;
+                target = null;
             }
         }
-        public bool readyToMove
-        {
-            //This set is only for outsiders when rdy to move.
-            set
-            {
-                canMove = value;
-                timeStartedMovement = Time.time;
-                distanceToNextTile = (tile.transform.position - destination.transform.position).magnitude;
-            }
-           
-        }
+       
         void OnMouseOver()
         {
             //Select the unit
             if (Input.GetMouseButtonDown(0))
             {
-                selected = true;
+                //Tile needs a selected property, that will be set when mouse over occupant on tile or tile.
+                //Then once selected, Tile needs to check for the occupant on it(if there is one)
+                //Then enterTile and exitTile need to be implemented to give destination value and swap what tile occupant
+                //is currently occupying.
+
+                //With this call Tile is selected, checks for occupant and transfers the instructions for occupant to do.
+                //occupying.selected = true
             }
         }
 
        
-        public Tile destination { set; get;}
+        //Tile targeting for action, attacking/movement
+        public Tile target { set; get;}
         //Occupant Implementation
 
         #region Occupant
@@ -77,14 +71,24 @@ namespace Olympus.Phalanx.Entity
                 return 0;
             }
         }
-        public bool selected { set; get; }
 
         //Tile occupying
         public Tile tile
         {
-            get;
-
-            set;
+            get
+            {
+                return occupying;
+            }
+            set
+            {
+                //Doesn't need to move from tile to another tile if there is no current tile.
+                if (occupying != null)
+                {
+                    timeStartedMovement = Time.time;
+                    distanceToNextTile = (occupying.transform.position - target.transform.position).magnitude;
+                }
+                occupying = value;
+            }
         }
     
         public AttackInfo attack
