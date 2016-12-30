@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Olympus.Phalanx.Entity;
 
 namespace Olympus.Phalanx.Map
@@ -7,7 +8,7 @@ namespace Olympus.Phalanx.Map
 
     public class Tile : MonoBehaviour
     {
-
+       
         bool this[Tile neighbor]
         {
             get
@@ -38,6 +39,11 @@ namespace Olympus.Phalanx.Map
             set { }
         }
 
+        private void Awake()
+        {
+           
+        }
+
         // Use this for initialization
         void Start()
         {
@@ -66,9 +72,10 @@ namespace Olympus.Phalanx.Map
         {
             //TODO
         }
-
+       
         public void enterTile(Entity.IOccupant newOccupant)
         {
+
             //TODO
         }
 
@@ -79,8 +86,8 @@ namespace Olympus.Phalanx.Map
 
         public Tile[] getNeighbors()
         {
+            return null; 
             //TODO
-            return null;
         }
     }
 }
