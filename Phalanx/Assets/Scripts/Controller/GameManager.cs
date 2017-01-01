@@ -41,7 +41,7 @@ namespace Olympus.Phalanx.Controller
 
         private void initializeMap()
         {
-            if (mapManager == null)
+            if (mapManager = MapManager.instance)
             {
                 mapManager = gameObject.AddComponent<MapManager>();
             }
