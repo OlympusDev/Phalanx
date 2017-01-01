@@ -1,4 +1,5 @@
 ﻿using Olympus.Phalanx.Map;
+using UnityEngine;
 
 namespace Olympus.Phalanx.Controller
 {
@@ -25,23 +26,13 @@ namespace Olympus.Phalanx.Controller
                 return;
             }
 
-
             //Check for move
             if (clickedTile == activeTile)
             {
                 if (selectedUnit != null)
                 {
-                    //placeholder neighbor check because
-                    //bool Tile[Tile neighbor] is not public
-                    foreach (Tile t in selectedUnit.tile.getNeighbors())
-                    {
-                        if (t == activeTile)
-                        {
-                            //figure out who tells the tiles to update its occupants
-                            //selectedUnit.tile.occupant = null;
+                    if (selectedUnit.tile[clickedTile]) { 
                             selectedUnit.tile = activeTile;
-
-                        }
                     }
                 }
             }

@@ -13,6 +13,9 @@ namespace Olympus.Phalanx.Controller
         private GameState active;
         private Dictionary<int, GameState> gameStates;
 
+        [SerializeField]
+        private GameObject _entity;
+
         private MapManager mapManager;
 
 
@@ -24,7 +27,7 @@ namespace Olympus.Phalanx.Controller
 
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             if (instance == null)
             {
@@ -38,10 +41,18 @@ namespace Olympus.Phalanx.Controller
             initializeGameStates();
         }
 
+        void Start()
+        {
+            GameObject entity = Instantiate(_entity);
+            Entity.IOccupant unit = entity.GetComponentInChildren<Entity.Unit>();
+            unit.tile
+                = mapManager[new Point(5, 5)];
+        }
+
 
         private void initializeMap()
         {
-            if (mapManager = MapManager.instance)
+            if (!(mapManager = MapManager.instance))
             {
                 mapManager = gameObject.AddComponent<MapManager>();
             }
