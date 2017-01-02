@@ -1,11 +1,23 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using Olympus.Phalanx.Map;
+using System;
 
 namespace Olympus.Phalanx.Controller
 {
     public class GameManager : MonoBehaviour
     {
         private static GameManager _instance;
+
+        private GameInfo gameInfo;
+        private GameState active;
+        private Dictionary<int, GameState> gameStates;
+
+        [SerializeField]
+        private GameObject _entity;
+
+        private MapManager mapManager;
+
 
         public static GameManager instance
         {
@@ -15,7 +27,7 @@ namespace Olympus.Phalanx.Controller
 
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             if (instance == null)
             {
@@ -25,40 +37,71 @@ namespace Olympus.Phalanx.Controller
             {
                 Destroy(this);
             }
+            initializeMap();
+            initializeGameStates();
         }
 
-        // Update is called once per frame
-        void Update()
+        void Start()
         {
-
+            GameObject entity = Instantiate(_entity);
+            Entity.IOccupant unit = entity.GetComponentInChildren<Entity.Unit>();
+            unit.tile
+                = mapManager[new Point(5, 5)];
         }
 
-        public void mapTileClicked(Map.Tile tile)
+
+        private void initializeMap()
         {
-            //TODO
-            //This will probably be where most of the game logic will occur.
+            if (!(mapManager = MapManager.instance))
+            {
+                mapManager = gameObject.AddComponent<MapManager>();
+            }
         }
 
-        #region Button Clicks
-        public void infoOptionClicked()
+        private void initializeGameStates()
         {
-            //TODO
+            if (gameStates == null)
+            {
+                gameInfo = new GameInfo(this);
+                gameStates = new Dictionary<int, GameState>(1);
+                gameStates.Add(1, new GameStateMove(gameInfo));
+                active = gameStates[1];
+            }
         }
 
-        public void selectOptionClicked()
+        private class GameInfo : IGame
         {
-            //TODO
+            private GameManager parent { get; set; }
+            internal GameInfo(GameManager parent)
+            {
+                this.parent = parent;
+            }
+            public int activePlayer
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public MapManager mapManager
+            {
+                get
+                {
+                    return parent.mapManager;
+                }
+            }
         }
 
-        public void moveOptionClicked()
+        public void tileClick(Tile clickedTile, Map.TileClickEventArgs args)
         {
-            //TODO
+            active.tileClick(clickedTile, args);
         }
 
-        public void attackOptionClicked()
-        {
-            //TODO
-        }
-        #endregion
     }
 }
