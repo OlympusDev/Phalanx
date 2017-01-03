@@ -1,25 +1,32 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using Olympus.Phalanx.Entity;
 
 namespace Olympus.Phalanx.Map
 {
-
     public class Tile : MonoBehaviour
     {
+        private ICollection<Tile> neighbors = new List<Tile>();
 
-        bool this[Tile neighbor]
+        private Point _position;
+       
+        public bool this[Tile neighbor]
         {
             get
             {
-                //TODO
+                foreach (Tile t in neighbors)
+                {
+                    if (t == neighbor)
+                        return true;
+                }
                 return false;
             }
         }
 
         public IOccupant occupant
         {//TODO
-            get { return null; }
+            get;
+            set;
         }
 
         public TerrainType terrain
@@ -29,13 +36,29 @@ namespace Olympus.Phalanx.Map
 
         public int x
         {//TODO
-            get { return 0; }
-            set { }
+            get { return _position.x; }
+            set { _position.x = value; }
         }
+
         public int y
         {//TODO
-            get { return 0; }
-            set { }
+            get { return _position.y; }
+            set { _position.y = value; }
+        }
+
+        public Point position
+        {
+            
+            get { return _position; }
+            set
+            {
+                _position = value;
+            }
+        }
+
+        void OnMouseUpAsButton()
+        {
+            Controller.GameManager.instance.tileClick(this, null);
         }
 
         // Use this for initialization
@@ -58,7 +81,9 @@ namespace Olympus.Phalanx.Map
         //Called on initialization
         public void addNeighbor(Tile neighbor)
         {
-            //TODO
+            if (!neighbors
+                .Contains(neighbor))
+                neighbors.Add(neighbor);
         }
 
 
@@ -66,9 +91,10 @@ namespace Olympus.Phalanx.Map
         {
             //TODO
         }
-
+       
         public void enterTile(Entity.IOccupant newOccupant)
         {
+
             //TODO
         }
 
@@ -79,8 +105,8 @@ namespace Olympus.Phalanx.Map
 
         public Tile[] getNeighbors()
         {
+            return null; 
             //TODO
-            return null;
         }
     }
 }
