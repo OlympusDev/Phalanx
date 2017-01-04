@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Olympus.Phalanx.Controller;
 using UnityEngine;
 
 namespace Olympus.Phalanx.Map
@@ -10,11 +11,17 @@ namespace Olympus.Phalanx.Map
             get;
             private set;
         }
+        public GameManager gameManager {
+            get;
+            private set;
+        }
 
         [SerializeField]
         private GameObject[] tile;
 
         private Dictionary<Point, Tile> map;
+
+        public event TileClickEvent tileClickEvent;
 
         public Tile this[Point position]
         {
@@ -39,6 +46,11 @@ namespace Olympus.Phalanx.Map
             generateMap();
         }
 
+        void Start()
+        {
+            gameManager = GameManager.instance;
+        }
+
         // Update is called once per frame
         void Update()
         {
@@ -51,6 +63,12 @@ namespace Olympus.Phalanx.Map
             return null;
         }
 
+        IList<Tile> calculatePath(Tile origin, MoveInfo moves)
+        {
+            //TODO
+            return null;
+        }
+
         private void LoadTiles()
         {
             tile = Resources.LoadAll<GameObject>("Map");
@@ -58,6 +76,7 @@ namespace Olympus.Phalanx.Map
 
         private void generateMap()
         {
+            #region placeholder Code
             float xOffset = 10;
             float zOffset = 10;
             float xStart = 0;
@@ -88,13 +107,16 @@ namespace Olympus.Phalanx.Map
                     current = tileInstance.GetComponentInChildren<Tile>();
                     currentRow[j] = current;
                     current.position = new Point(i, j);
+                    current.tileClicked += (Tile tile,TileClickEventArgs eventArgs)=>
+                    {
+                        tileClickEvent(tile, eventArgs);
+                    };
                     map.Add(current.position, current);
                     if (j - 1 > 0)
                     {
                         tileInstance.GetComponentInChildren<Tile>().addNeighbor(currentRow[j - 1]);
                         currentRow[j - 1].addNeighbor(tileInstance.GetComponentInChildren<Tile>());
                     }
-
                 }
                 if (lastRow != null)
                 {
@@ -107,8 +129,7 @@ namespace Olympus.Phalanx.Map
                 lastRow = currentRow;
                 currentRow = new Tile[y];
             }
-
-
+            #endregion
         }
     }
 

@@ -16,6 +16,5 @@ namespace Olympus.Phalanx.Entity
         Skill[] getSkills();
         void damage(AttackInfo info);
         void addEffect();
-
     }
 }
