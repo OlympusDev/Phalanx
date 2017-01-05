@@ -7,10 +7,8 @@ namespace Olympus.Phalanx.Controller
 {
     public class GameManager : MonoBehaviour
     {
-        private static GameManager _instance;
-
         private GameInfo gameInfo;
-        private GameState active;
+        private GameState activeGameState;
         private Dictionary<int, GameState> gameStates;
 
         [SerializeField]
@@ -21,8 +19,8 @@ namespace Olympus.Phalanx.Controller
 
         public static GameManager instance
         {
-            get { return _instance; }
-            private set { _instance = value; }
+            get;
+            private set;
         }
 
 
@@ -37,12 +35,14 @@ namespace Olympus.Phalanx.Controller
             {
                 Destroy(this);
             }
-            initializeMap();
             initializeGameStates();
         }
 
         void Start()
         {
+            initializeMap();
+
+            //Unit setup - placeholder
             GameObject entity = Instantiate(_entity);
             Entity.IOccupant unit = entity.GetComponentInChildren<Entity.Unit>();
             unit.tile
@@ -65,7 +65,7 @@ namespace Olympus.Phalanx.Controller
                 gameInfo = new GameInfo(this);
                 gameStates = new Dictionary<int, GameState>(1);
                 gameStates.Add(1, new GameStateMove(gameInfo));
-                active = gameStates[1];
+                activeGameState = gameStates[1];
             }
         }
 
@@ -100,7 +100,7 @@ namespace Olympus.Phalanx.Controller
 
         public void tileClick(Tile clickedTile, Map.TileClickEventArgs args)
         {
-            active.tileClick(clickedTile, args);
+            activeGameState.tileClick(clickedTile, args);
         }
 
     }

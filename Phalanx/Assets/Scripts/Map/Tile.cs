@@ -4,12 +4,15 @@ using Olympus.Phalanx.Entity;
 
 namespace Olympus.Phalanx.Map
 {
+    public delegate void TileClickEvent(Tile instance, TileClickEventArgs eventArgs);
+
     public class Tile : MonoBehaviour
     {
         private ICollection<Tile> neighbors = new List<Tile>();
 
         private Point _position;
-       
+        public event TileClickEvent tileClicked;
+
         public bool this[Tile neighbor]
         {
             get
@@ -48,7 +51,7 @@ namespace Olympus.Phalanx.Map
 
         public Point position
         {
-            
+
             get { return _position; }
             set
             {
@@ -58,7 +61,7 @@ namespace Olympus.Phalanx.Map
 
         void OnMouseUpAsButton()
         {
-            Controller.GameManager.instance.tileClick(this, null);
+            tileClicked(this, null);
         }
 
         // Use this for initialization
@@ -91,8 +94,8 @@ namespace Olympus.Phalanx.Map
         {
             //TODO
         }
-       
-        public void enterTile(Entity.IOccupant newOccupant)
+
+        public void enterTile(IOccupant newOccupant)
         {
 
             //TODO
@@ -105,7 +108,7 @@ namespace Olympus.Phalanx.Map
 
         public Tile[] getNeighbors()
         {
-            return null; 
+            return null;
             //TODO
         }
     }
