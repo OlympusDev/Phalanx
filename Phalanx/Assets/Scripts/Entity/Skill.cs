@@ -5,8 +5,9 @@ namespace Olympus.Phalanx.Entity
 {
     public class Skill
     {
-        AttackInfo attack;
+        public AttackInfo attack;
         //effectZone
+        public Map.MoveInfo info;
         public int range;
 
 

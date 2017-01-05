@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Olympus.Phalanx.Map;
 using System;
 
@@ -20,12 +21,16 @@ namespace Olympus.Phalanx.Entity
             
         }
 
+        public void move(IList<Tile> moveOrder)
+        {
+            //TODO: method for moving units
+        }
 
 
         //To upgrade for movement:
         //Take in a collection of tiles that shows movement path.
         //Possibly call MapManager for the path.
-        public IEnumerator move(Vector3 startingPos, 
+        private IEnumerator move(Vector3 startingPos, 
             Vector3 endingPos, 
             float timeStartedTravelling, 
             float timeToTravel)
@@ -81,6 +86,14 @@ namespace Olympus.Phalanx.Entity
         //TODO
         //Returns info about the "basic" attack that a character makes
         public AttackInfo attack
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public OccupantInfo info
         {
             get
             {
