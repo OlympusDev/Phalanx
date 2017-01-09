@@ -4,9 +4,7 @@ using UnityEngine;
 
 namespace Olympus.Phalanx.Entity
 {
-    //RPGSystems required
-    //public class Stats : Systens.StatSystem.StatCollection
-    public class Stats : MonoBehaviour
+    public class Stats : Systems.StatSystem.StatCollection
     {
 
         // Use this for initialization
@@ -20,11 +18,10 @@ namespace Olympus.Phalanx.Entity
         {
 
         }
-
-        /*
-        public override void ConfigureStats()
+        
+        protected override void ConfigureStats()
         {
             //TODO
-        }//*/
+        }
     }
 }

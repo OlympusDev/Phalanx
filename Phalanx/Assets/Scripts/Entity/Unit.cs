@@ -6,10 +6,15 @@ using System;
 
 namespace Olympus.Phalanx.Entity
 {
-    public class Unit : MonoBehaviour, IOccupant
+    [RequireComponent(typeof (Stats))]
+    public class Unit : Systems.EntitySystem.Entity, IOccupant
     {
         private Tile occupying;
 
+        protected override void Awake()
+        {
+
+        }
         // Use this for initialization
         void Start()
         {

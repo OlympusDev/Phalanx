@@ -47,6 +47,7 @@ namespace Olympus.Phalanx.Controller
             Entity.IOccupant unit = entity.GetComponentInChildren<Entity.Unit>();
             unit.tile
                 = mapManager[new Point(5, 5)];
+            mapManager.tileClickEvent += tileClick;
         }
 
 
