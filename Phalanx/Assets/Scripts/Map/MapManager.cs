@@ -17,7 +17,20 @@ namespace Olympus.Phalanx.Map
         }
 
         [SerializeField]
-        private GameObject[] tile;
+        private GameObject[][] tile;
+
+        private int[][] mapDef = new int[][]
+        {
+            new int []{1,1,1,1,1,1,2,2,2,1,1,1,1 },
+            new int []{1,1,1,1,1,1,1,0,1,1,1,1,1 },
+            new int []{1,1,1,1,3,3,3,0,1,1,3,1,1 },
+            new int []{1,1,1,1,0,0,0,0,0,1,3,1,1 },
+            new int []{1,1,3,1,2,2,2,2,2,1,3,1,1 },
+            new int []{1,1,3,1,0,0,0,0,0,1,1,1,1 },
+            new int []{1,1,3,1,1,0,3,3,3,1,1,1,1 },
+            new int []{1,1,1,1,1,0,1,1,1,1,1,1,1 },
+            new int []{1,1,1,1,2,2,2,1,1,1,1,1,1 }
+        };
 
         private Dictionary<Point, Tile> map;
 
@@ -71,7 +84,15 @@ namespace Olympus.Phalanx.Map
 
         private void LoadTiles()
         {
-            tile = Resources.LoadAll<GameObject>("Map");
+            tile = new GameObject[4][];
+            tile[0] = Resources.LoadAll<GameObject>("Map/Water");
+            tile[1] = Resources.LoadAll<GameObject>("Map/Dirt");
+            tile[2] = Resources.LoadAll<GameObject>("Map/Bridge");
+            tile[3] = Resources.LoadAll<GameObject>("Map/Obstacle");
+            Debug.Log(tile[0].Length + " " +
+                tile[1].Length + " " +
+                tile[2].Length + " " +
+                tile[3].Length + " ");
         }
 
         private void generateMap()
@@ -86,25 +107,23 @@ namespace Olympus.Phalanx.Map
             int y = 10;
 
             int types = tile.Length;
-            int count = 0;
             if(types == 0)
             {
                 return;
             }
 
-            Tile[] currentRow = new Tile[y];
+            Tile[] currentRow = null;
             Tile[] lastRow = null;
             Tile current = null;
 
-            for (int i = 0; i < x; i++)
+            for (int i = 0; i < mapDef.Length; i++)
             {
-                for (int j = 0; j < y; j++)
+                currentRow = new Tile[mapDef[i].Length];
+                for (int j = 0; j < mapDef[i].Length; j++)
                 {
-                    GameObject tileInstance = Instantiate(tile[count % types]);
-                    count++;
-                    tileInstance.transform.position = new Vector3(xStart + xOffset * i, 0, zStart + zOffset * j);
+                    current = makeTile(mapDef[i][j]);
+                    current.transform.parent.position = new Vector3(xStart + xOffset * i, 0, zStart + zOffset * j);
 
-                    current = tileInstance.GetComponentInChildren<Tile>();
                     currentRow[j] = current;
                     current.position = new Point(i, j);
                     current.tileClicked += (Tile tile,TileClickEventArgs eventArgs)=>
@@ -114,8 +133,8 @@ namespace Olympus.Phalanx.Map
                     map.Add(current.position, current);
                     if (j - 1 > 0)
                     {
-                        tileInstance.GetComponentInChildren<Tile>().addNeighbor(currentRow[j - 1]);
-                        currentRow[j - 1].addNeighbor(tileInstance.GetComponentInChildren<Tile>());
+                        current.addNeighbor(currentRow[j - 1]);
+                        currentRow[j - 1].addNeighbor(current);
                     }
                 }
                 if (lastRow != null)
@@ -131,6 +150,17 @@ namespace Olympus.Phalanx.Map
             }
             #endregion
         }
+
+        private Tile makeTile(int type)
+        {
+            int variant = Random.Range(0, tile[type].Length);
+            GameObject tileInstance = Instantiate(tile[type][variant]);
+            Tile current = null;
+            current = tileInstance.GetComponentInChildren<Tile>();
+
+            return current;
+        }
+
     }
 
     public struct Point
