@@ -45,8 +45,7 @@ namespace Olympus.Phalanx.Controller
             //Unit setup - placeholder
             GameObject entity = Instantiate(_entity);
             Entity.IOccupant unit = entity.GetComponentInChildren<Entity.Unit>();
-            unit.tile
-                = mapManager[new Point(5, 5)];
+            unit.tile = mapManager[new Point(5, 5)];
             mapManager.tileClickEvent += tileClick;
         }
 

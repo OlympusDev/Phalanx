@@ -40,8 +40,9 @@ namespace Olympus.Phalanx.Map
             return false;
         }
 
-        public enum MoveType
-        {
-        }
+    }
+    public enum MoveType
+    {
+        Standard = 0
     }
 }

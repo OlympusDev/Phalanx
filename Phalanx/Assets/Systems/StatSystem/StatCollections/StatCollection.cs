@@ -86,7 +86,7 @@ namespace Systems.StatSystem
         {
             foreach (var i in GetAllRegeneratingStats)
             {
-                if (i.StatCurrentValue != i.StatValue)
+                if (i.StatCurrentValue != i.Value)
                 {
                     if (Time.time > i.TimeForNextRegen)
                     {
@@ -323,7 +323,7 @@ namespace Systems.StatSystem
             foreach (var key in StatDict.Keys)
             {
                 var stat = this[key];
-                i += stat.StatName + ": " + stat.StatValue + "\n";
+                i += stat.StatName + ": " + stat.Value + "\n";
             }
             return i;
         }

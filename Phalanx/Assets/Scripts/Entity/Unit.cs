@@ -6,7 +6,7 @@ using System;
 
 namespace Olympus.Phalanx.Entity
 {
-    [RequireComponent(typeof (Stats))]
+    [RequireComponent(typeof(Stats.StatCollection))]
     public class Unit : Systems.EntitySystem.Entity, IOccupant
     {
         private Tile occupying;
@@ -23,7 +23,7 @@ namespace Olympus.Phalanx.Entity
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
         public void move(IList<Tile> moveOrder)
@@ -35,9 +35,9 @@ namespace Olympus.Phalanx.Entity
         //To upgrade for movement:
         //Take in a collection of tiles that shows movement path.
         //Possibly call MapManager for the path.
-        private IEnumerator move(Vector3 startingPos, 
-            Vector3 endingPos, 
-            float timeStartedTravelling, 
+        private IEnumerator move(Vector3 startingPos,
+            Vector3 endingPos,
+            float timeStartedTravelling,
             float timeToTravel)
         {
             while (transform.position != endingPos)
@@ -71,11 +71,11 @@ namespace Olympus.Phalanx.Entity
             {
                 //Doesn't need to move from tile to another tile if there is no current tile.
                 if (occupying != null)
-                {   
+                {
                     StartCoroutine(move(
-                        occupying.transform.position, 
-                        value.transform.position, 
-                        Time.time, 
+                        occupying.transform.position,
+                        value.transform.position,
+                        Time.time,
                         5.0f));
                     occupying.occupant = null;
                 }
@@ -87,14 +87,19 @@ namespace Olympus.Phalanx.Entity
                 occupying.occupant = this;
             }
         }
-    
+
         //TODO
         //Returns info about the "basic" attack that a character makes
         public AttackInfo attack
         {
             get
             {
-                throw new NotImplementedException();
+                return new AttackInfo(
+                    GetStat<Systems.StatSystem.Stat>(Systems.StatSystem.StatType.AttackDice).Value,
+                    GetStat<Systems.StatSystem.Stat>(Systems.StatSystem.StatType.AttackBase).Value,
+                    0,//TODO get Height From Tile
+                    0,//TODO define Attack Types
+                    null);
             }
         }
 
@@ -113,10 +118,7 @@ namespace Olympus.Phalanx.Entity
             //TODO
             return null;
         }
-        public void dealDamage(AttackInfo info)
-        {
-            //TODO
-        }
+
         public void addEffect()
         {
             //TODO
@@ -124,7 +126,25 @@ namespace Olympus.Phalanx.Entity
 
         public void damage(AttackInfo info)
         {
-            throw new NotImplementedException();
+            int damage = info.attackBase;
+            int defenseRolls = GetStat<Systems.StatSystem.Stat>(Systems.StatSystem.StatType.DefenseDice).Value;
+            damage -= GetStat<Systems.StatSystem.Stat>(Systems.StatSystem.StatType.DefenceBase).Value;
+
+            for (int i = 0; i < info.attackRoll; i++)
+            {
+                if (UnityEngine.Random.Range(1, 6 + 1) >= 5)
+                {
+                    damage++;
+                }
+            }
+            for (int i = 0; i < defenseRolls; i++)
+            {
+                if (UnityEngine.Random.Range(1, 6 + 1) >= 4)
+                {
+                    damage--;
+                }
+            }
+            GetStat<Systems.StatSystem.StatVital>(Systems.StatSystem.StatType.Health).Value -= (damage > 0 ? damage : 0);
         }
         #endregion
     }
