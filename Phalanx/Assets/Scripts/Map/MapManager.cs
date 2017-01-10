@@ -11,7 +11,8 @@ namespace Olympus.Phalanx.Map
             get;
             private set;
         }
-        public GameManager gameManager {
+        public GameManager gameManager
+        {
             get;
             private set;
         }
@@ -54,7 +55,7 @@ namespace Olympus.Phalanx.Map
             if (instance != null)
                 Destroy(this);
             instance = this;
-            map = new Dictionary<Point, Tile>(100);
+            map = new Dictionary<Point, Tile>(130);
             LoadTiles();
             generateMap();
         }
@@ -89,66 +90,58 @@ namespace Olympus.Phalanx.Map
             tile[1] = Resources.LoadAll<GameObject>("Map/Dirt");
             tile[2] = Resources.LoadAll<GameObject>("Map/Bridge");
             tile[3] = Resources.LoadAll<GameObject>("Map/Obstacle");
-            Debug.Log(tile[0].Length + " " +
-                tile[1].Length + " " +
-                tile[2].Length + " " +
-                tile[3].Length + " ");
         }
 
+        #region Map Generation
         private void generateMap()
         {
-            #region placeholder Code
             float xOffset = 10;
             float zOffset = 10;
             float xStart = 0;
             float zStart = 0;
 
-            int x = 10;
-            int y = 10;
-
-            int types = tile.Length;
-            if(types == 0)
-            {
-                return;
-            }
-
             Tile[] currentRow = null;
             Tile[] lastRow = null;
             Tile current = null;
 
+            //Iterate over the map
             for (int i = 0; i < mapDef.Length; i++)
             {
+                //Generate the Row
                 currentRow = new Tile[mapDef[i].Length];
                 for (int j = 0; j < mapDef[i].Length; j++)
                 {
                     current = makeTile(mapDef[i][j]);
+                    //Set the position of the parent
                     current.transform.parent.position = new Vector3(xStart + xOffset * i, 0, zStart + zOffset * j);
-
-                    currentRow[j] = current;
                     current.position = new Point(i, j);
-                    current.tileClicked += (Tile tile,TileClickEventArgs eventArgs)=>
+
+                    //Hold a reference to the Tile
+                    map.Add(current.position, current);
+                    current.tileClicked += (Tile tile, TileClickEventArgs eventArgs) =>
                     {
                         tileClickEvent(tile, eventArgs);
                     };
-                    map.Add(current.position, current);
+
+                    //Link within the row
                     if (j - 1 > 0)
                     {
                         current.addNeighbor(currentRow[j - 1]);
                         currentRow[j - 1].addNeighbor(current);
                     }
+                    currentRow[j] = current;
                 }
+                //Link the row to the row before it
                 if (lastRow != null)
                 {
-                    for (int j = 0; j < y; j++)
+                    for (int j = 0; j < lastRow.Length; j++)
                     {
                         lastRow[j].addNeighbor(currentRow[j]);
                         currentRow[j].addNeighbor(lastRow[j]);
                     }
                 }
                 lastRow = currentRow;
-                currentRow = new Tile[y];
             }
-            #endregion
         }
 
         private Tile makeTile(int type)
@@ -160,7 +153,7 @@ namespace Olympus.Phalanx.Map
 
             return current;
         }
-
+        #endregion
     }
 
     public struct Point
@@ -168,7 +161,7 @@ namespace Olympus.Phalanx.Map
         public int x;
         public int y;
 
-        public Point(int x,int y)
+        public Point(int x, int y)
         {
             this.x = x;
             this.y = y;
