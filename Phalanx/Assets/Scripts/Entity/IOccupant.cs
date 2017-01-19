@@ -9,7 +9,6 @@ namespace Olympus.Phalanx.Entity
 
         Map.Tile tile { get; set; }
         AttackInfo attack { get; }
-
         int team { get; }
 
         Skill this[int index] { get; }
