@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Olympus.Phalanx.Controller;
 using UnityEngine;
 
 namespace Olympus.Phalanx.Map
@@ -10,11 +11,31 @@ namespace Olympus.Phalanx.Map
             get;
             private set;
         }
+        public GameManager gameManager
+        {
+            get;
+            private set;
+        }
 
         [SerializeField]
-        private GameObject[] tile;
+        private GameObject[][] tile;
+
+        private int[][] mapDef = new int[][]
+        {
+            new int []{1,1,1,1,1,1,2,2,2,1,1,1,1 },
+            new int []{1,1,1,1,1,1,1,0,1,1,1,1,1 },
+            new int []{1,1,1,1,3,3,3,0,1,1,3,1,1 },
+            new int []{1,1,1,1,0,0,0,0,0,1,3,1,1 },
+            new int []{1,1,3,1,2,2,2,2,2,1,3,1,1 },
+            new int []{1,1,3,1,0,0,0,0,0,1,1,1,1 },
+            new int []{1,1,3,1,1,0,3,3,3,1,1,1,1 },
+            new int []{1,1,1,1,1,0,1,1,1,1,1,1,1 },
+            new int []{1,1,1,1,2,2,2,1,1,1,1,1,1 }
+        };
 
         private Dictionary<Point, Tile> map;
+
+        public event TileClickEvent tileClickEvent;
 
         public Tile this[Point position]
         {
@@ -34,28 +55,49 @@ namespace Olympus.Phalanx.Map
             if (instance != null)
                 Destroy(this);
             instance = this;
-            map = new Dictionary<Point, Tile>(100);
+            map = new Dictionary<Point, Tile>(130);
             LoadTiles();
             generateMap();
         }
 
-        // Update is called once per frame
-        void Update()
+        void Start()
         {
-
+            gameManager = GameManager.instance;
         }
 
+        //Contiguous
         ICollection<Tile> calculateRange(Tile origin, MoveInfo moves)
         {
+            Debug.Log("You wish this actually calculated the range");
+            //TODO
+            return null;
+        }
+
+        //Noncontiguous
+        ICollection<Tile> calculateTargets(Tile origin, MoveInfo moves)
+        {
+            Debug.Log("You wish this actually calculated the Targets");
+            //TODO
+            return null;
+        }
+
+        IList<Tile> calculatePath(Tile origin, MoveInfo moves)
+        {
+            Debug.Log("You wish this actually calculated the Path");
             //TODO
             return null;
         }
 
         private void LoadTiles()
         {
-            tile = Resources.LoadAll<GameObject>("Map");
+            tile = new GameObject[4][];
+            tile[0] = Resources.LoadAll<GameObject>("Map/Water");
+            tile[1] = Resources.LoadAll<GameObject>("Map/Dirt");
+            tile[2] = Resources.LoadAll<GameObject>("Map/Bridge");
+            tile[3] = Resources.LoadAll<GameObject>("Map/Obstacle");
         }
 
+        #region Map Generation
         private void generateMap()
         {
             float xOffset = 10;
@@ -63,53 +105,60 @@ namespace Olympus.Phalanx.Map
             float xStart = 0;
             float zStart = 0;
 
-            int x = 10;
-            int y = 10;
-
-            int types = tile.Length;
-            int count = 0;
-            if(types == 0)
-            {
-                return;
-            }
-
-            Tile[] currentRow = new Tile[y];
+            Tile[] currentRow = null;
             Tile[] lastRow = null;
             Tile current = null;
 
-            for (int i = 0; i < x; i++)
+            //Iterate over the map
+            for (int i = 0; i < mapDef.Length; i++)
             {
-                for (int j = 0; j < y; j++)
+                //Generate the Row
+                currentRow = new Tile[mapDef[i].Length];
+                for (int j = 0; j < mapDef[i].Length; j++)
                 {
-                    GameObject tileInstance = Instantiate(tile[count % types]);
-                    count++;
-                    tileInstance.transform.position = new Vector3(xStart + xOffset * i, 0, zStart + zOffset * j);
-
-                    current = tileInstance.GetComponentInChildren<Tile>();
-                    currentRow[j] = current;
+                    current = makeTile(mapDef[i][j]);
+                    //Set the position of the parent
+                    current.transform.parent.position = new Vector3(xStart + xOffset * i, 0, zStart + zOffset * j);
                     current.position = new Point(i, j);
+
+                    //Hold a reference to the Tile
                     map.Add(current.position, current);
+                    current.tileClicked += (Tile tile, TileClickEventArgs eventArgs) =>
+                    {
+                        tileClickEvent(tile, eventArgs);
+                    };
+
+                    //Link within the row
                     if (j - 1 > 0)
                     {
-                        tileInstance.GetComponentInChildren<Tile>().addNeighbor(currentRow[j - 1]);
-                        currentRow[j - 1].addNeighbor(tileInstance.GetComponentInChildren<Tile>());
+                        current.addNeighbor(currentRow[j - 1]);
+                        currentRow[j - 1].addNeighbor(current);
                     }
-
+                    currentRow[j] = current;
                 }
+                //Link the row to the row before it
                 if (lastRow != null)
                 {
-                    for (int j = 0; j < y; j++)
+                    for (int j = 0; j < lastRow.Length; j++)
                     {
                         lastRow[j].addNeighbor(currentRow[j]);
                         currentRow[j].addNeighbor(lastRow[j]);
                     }
                 }
                 lastRow = currentRow;
-                currentRow = new Tile[y];
             }
-
-
         }
+
+        private Tile makeTile(int type)
+        {
+            int variant = Random.Range(0, tile[type].Length);
+            GameObject tileInstance = Instantiate(tile[type][variant]);
+            Tile current = null;
+            current = tileInstance.GetComponentInChildren<Tile>();
+
+            return current;
+        }
+        #endregion
     }
 
     public struct Point
@@ -117,7 +166,7 @@ namespace Olympus.Phalanx.Map
         public int x;
         public int y;
 
-        public Point(int x,int y)
+        public Point(int x, int y)
         {
             this.x = x;
             this.y = y;

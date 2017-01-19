@@ -7,7 +7,8 @@
         {
             game = parent;
         }
+        public abstract string debugInfo();
         public abstract void tileClick(Map.Tile clickedTile, Map.TileClickEventArgs args);
-        //void buttonClicked(ButtonPressEventArgs args);
+        public abstract void buttonClicked(ButtonPressEventArgs args);
     }
 }

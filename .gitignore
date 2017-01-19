@@ -30,6 +30,4 @@ sysinfo.txt
 *.unitypackage
 
 # Folder for holding test files.
-testingScripts
-testingScripts.meta
-testingScripts/
+Phalanx/Assets/Scripts/Temp/
