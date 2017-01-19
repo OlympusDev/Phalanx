@@ -16,7 +16,6 @@ namespace Olympus.Phalanx.Controller
 
         private MapManager mapManager;
 
-
         public static GameManager instance
         {
             get;
@@ -64,7 +63,8 @@ namespace Olympus.Phalanx.Controller
             {
                 gameInfo = new GameInfo(this);
                 gameStates = new Dictionary<int, GameState>(1);
-                gameStates.Add(1, new GameStateMove(gameInfo));
+                gameStates.Add(1, new States.GameStateMove(gameInfo));
+                gameStates.Add(2, new Tools.TestingState(gameInfo));
                 activeGameState = gameStates[1];
             }
         }
@@ -96,12 +96,34 @@ namespace Olympus.Phalanx.Controller
                     return parent.mapManager;
                 }
             }
+
+            public void changeState(int v)
+            {
+                if (parent.gameStates.ContainsKey(v))
+                {
+                    parent.activeGameState = parent.gameStates[v];
+                }
+            }
         }
 
+        #region state relay
         public void tileClick(Tile clickedTile, Map.TileClickEventArgs args)
         {
+            Debug.Log("Tile Clicked: " + args.ToString());
             activeGameState.tileClick(clickedTile, args);
         }
 
+        public void buttonClicked(ButtonPressEventArgs button)
+        {
+            Debug.Log("Button Clicked: " + button.buttonID);
+            activeGameState.buttonClicked(button);
+        }
+
+        public string debugInfo()
+        {
+            Debug.Log("Getting Log Info");
+            return activeGameState.debugInfo();
+        }
+        #endregion
     }
 }

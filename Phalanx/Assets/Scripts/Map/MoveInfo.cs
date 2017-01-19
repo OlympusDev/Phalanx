@@ -7,42 +7,44 @@ namespace Olympus.Phalanx.Map
     public class MoveInfo
     {
 
-        public int moves { get; set; }
+        public int moves { get; private set; }
         public MoveType type { get; private set; }
+        public MoveInfo from { get; private set; }
+        public Tile tile { get; private set; }
 
-        // Use this for initialization
-        void Start()
+        public MoveInfo(int moves, MoveType type,Tile tile)
         {
-
+            this.moves = moves;
+            this.type = type;
+            this.tile = tile;
+            from = this; //If origin
         }
 
-        // Update is called once per frame
-        void Update()
+        public MoveInfo(int moves, MoveType type,Tile tile,MoveInfo parent)
         {
-
+            this.moves = moves;
+            this.type = type;
+            this.tile = tile;
+            from =  parent; //remember who its moving from
         }
 
-        public MoveInfo(int moves, MoveType type)
+        public MoveInfo Move(Tile destination)
         {
-            //TODO
-        }
-        public MoveInfo memoize()
-        {
-            //TODO
-            //makes copy
-            return null;
+            return new MoveInfo(moves - 1, type, destination, this);
         }
         public bool better(MoveInfo info)
         {
             //TODO
             //Comparison
             //true if more moves left in this than info
-            return false;
+            //Posibly add 
+            return this.moves>info.moves;
         }
-
     }
     public enum MoveType
     {
-        Standard = 0
+        Walk = 0x0000,
+        Tank = 0x0001,
+        Attack = 0x0100
     }
 }

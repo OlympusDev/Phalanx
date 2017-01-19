@@ -1,17 +1,19 @@
-﻿
+﻿using Attribute = Systems.StatSystem.StatAttribute;
+using Type = Systems.StatSystem.StatType;
+
 namespace Olympus.Phalanx.Entity.Stats
 {
-    public class Warrior : StatCollection
+    public class Knight : StatCollection
     {
         protected override void ConfigureStats()
         {
             base.ConfigureStats();
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.AttackDice]).Base = 2;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.AttackBase]).Base = 0;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.DefenseDice]).Base = 1;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.DefenceBase]).Base = 1;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.Move]).Base = 2;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.Range]).Base = 1;
+            ((Attribute)this[Type.AttackDice]).Base = 2;
+            ((Attribute)this[Type.AttackBase]).Base = 0;
+            ((Attribute)this[Type.DefenseDice]).Base = 1;
+            ((Attribute)this[Type.DefenceBase]).Base = 1;
+            ((Attribute)this[Type.Move]).Base = 2;
+            ((Attribute)this[Type.Range]).Base = 1;
 
         }
     }

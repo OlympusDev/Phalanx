@@ -65,20 +65,25 @@ namespace Olympus.Phalanx.Map
             gameManager = GameManager.instance;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
+        //Contiguous
         ICollection<Tile> calculateRange(Tile origin, MoveInfo moves)
         {
+            Debug.Log("You wish this actually calculated the range");
+            //TODO
+            return null;
+        }
+
+        //Noncontiguous
+        ICollection<Tile> calculateTargets(Tile origin, MoveInfo moves)
+        {
+            Debug.Log("You wish this actually calculated the Targets");
             //TODO
             return null;
         }
 
         IList<Tile> calculatePath(Tile origin, MoveInfo moves)
         {
+            Debug.Log("You wish this actually calculated the Path");
             //TODO
             return null;
         }

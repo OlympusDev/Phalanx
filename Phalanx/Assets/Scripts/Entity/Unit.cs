@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Olympus.Phalanx.Map;
 using System;
+using StatSystem = Systems.StatSystem;
 
 namespace Olympus.Phalanx.Entity
 {
@@ -42,12 +43,19 @@ namespace Olympus.Phalanx.Entity
         {
             while (transform.position != endingPos)
             {
-                Debug.Log("Moving");
+                UnityEngine.Debug.Log("Moving");
                 float timeSinceLastMovement = Time.time - timeStartedTravelling;
                 float fractionTravelled = timeSinceLastMovement / timeToTravel;
                 transform.position = Vector3.Lerp(startingPos, endingPos, fractionTravelled);
                 yield return new WaitForEndOfFrame();
             }
+        }
+
+        public override string ToString()
+        {
+            string text = base.ToString();
+            text += "\nStats: \n" + Stats.ToString();
+            return text;
         }
 
         //Occupant Implementation
@@ -95,8 +103,8 @@ namespace Olympus.Phalanx.Entity
             get
             {
                 return new AttackInfo(
-                    GetStat<Systems.StatSystem.Stat>(Systems.StatSystem.StatType.AttackDice).Value,
-                    GetStat<Systems.StatSystem.Stat>(Systems.StatSystem.StatType.AttackBase).Value,
+                    GetStat<StatSystem.Stat>(StatSystem.StatType.AttackDice).Value,
+                    GetStat<StatSystem.Stat>(StatSystem.StatType.AttackBase).Value,
                     0,//TODO get Height From Tile
                     0,//TODO define Attack Types
                     null);

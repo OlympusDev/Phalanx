@@ -1,18 +1,19 @@
-﻿
+﻿using Attribute = Systems.StatSystem.StatAttribute;
+using Type = Systems.StatSystem.StatType;
+
 namespace Olympus.Phalanx.Entity.Stats
 {
-    public class Wizatd : StatCollection
+    public class Wizard : StatCollection
     {
         protected override void ConfigureStats()
         {
             base.ConfigureStats();
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.AttackDice]).Base = 4;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.AttackDice]).Base = 4;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.AttackBase]).Base = 1;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.DefenseDice]).Base = 0;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.DefenceBase]).Base = 0;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.Move]).Base = 2;
-            ((Systems.StatSystem.StatAttribute)this[Systems.StatSystem.StatType.Range]).Base = 2;
+            ((Attribute)this[Type.AttackDice]).Base = 4;
+            ((Attribute)this[Type.AttackBase]).Base = 1;
+            ((Attribute)this[Type.DefenseDice]).Base = 0;
+            ((Attribute)this[Type.DefenceBase]).Base = 0;
+            ((Attribute)this[Type.Move]).Base = 2;
+            ((Attribute)this[Type.Range]).Base = 2;
 
         }
     }
