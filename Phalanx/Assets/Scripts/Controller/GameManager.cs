@@ -107,10 +107,10 @@ namespace Olympus.Phalanx.Controller
         }
 
         #region state relay
-        public void tileClick(Tile clickedTile, Map.TileClickEventArgs args)
+        public void tileClick(TileClickEventArgs args)
         {
             Debug.Log("Tile Clicked: " + args.ToString());
-            activeGameState.tileClick(clickedTile, args);
+            activeGameState.tileClick(args);
         }
 
         public void buttonClicked(ButtonPressEventArgs button)

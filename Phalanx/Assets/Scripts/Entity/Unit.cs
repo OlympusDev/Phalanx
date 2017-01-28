@@ -29,6 +29,8 @@ namespace Olympus.Phalanx.Entity
 
         public void move(IList<Tile> moveOrder)
         {
+            foreach(Tile t in moveOrder)
+                Debug.Log("moving to "+ t.position.ToString());
             //TODO: method for moving units
         }
 

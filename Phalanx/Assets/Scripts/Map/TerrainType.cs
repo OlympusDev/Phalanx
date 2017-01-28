@@ -28,6 +28,6 @@ namespace Olympus.Phalanx.Map
         {
 
         }
-        public abstract bool tryMove(MoveInfo moveInfo, TerrainType previousTerrain);
+        public abstract bool tryMove(TargetingInfo moveInfo, TerrainType previousTerrain);
     }
 }

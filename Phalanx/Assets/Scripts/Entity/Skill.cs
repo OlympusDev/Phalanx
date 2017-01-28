@@ -7,7 +7,7 @@ namespace Olympus.Phalanx.Entity
     {
         public AttackInfo attack;
         //effectZone
-        public Map.MoveInfo info;
+        public Map.TargetingInfo info;
         public int range;
 
 
