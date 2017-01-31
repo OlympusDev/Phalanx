@@ -4,7 +4,7 @@ using Olympus.Phalanx.Entity;
 
 namespace Olympus.Phalanx.Map
 {
-    public delegate void TileClickEvent(Tile instance, TileClickEventArgs eventArgs);
+    public delegate void TileClickEvent(TileClickEventArgs eventArgs);
 
     public class Tile : MonoBehaviour
     {
@@ -61,23 +61,12 @@ namespace Olympus.Phalanx.Map
 
         void OnMouseUpAsButton()
         {
-            tileClicked(this, null);
-        }
-
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            tileClicked(new TileClickEventArgs(this, 0));
         }
 
         public void addEffect()
         {
+            Debug.Log("No Effects yet");
             //TODO
         }
 
@@ -92,6 +81,7 @@ namespace Olympus.Phalanx.Map
 
         void dealDamage(AttackInfo info)
         {
+            Debug.Log("Passing along Damage (jk not implemented yet)");
             //TODO
         }
 
@@ -103,11 +93,13 @@ namespace Olympus.Phalanx.Map
 
         public void exitTile()
         {
+
             //TODO
         }
 
         public Tile[] getNeighbors()
         {
+            Debug.Log("Get Neighbor");
             return null;
             //TODO
         }
