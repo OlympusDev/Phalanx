@@ -4,7 +4,7 @@ using Olympus.Phalanx.Entity;
 
 namespace Olympus.Phalanx.Map
 {
-    public delegate void TileClickEvent(Tile instance, TileClickEventArgs eventArgs);
+    public delegate void TileClickEvent(TileClickEventArgs eventArgs);
 
     public class Tile : MonoBehaviour
     {
@@ -61,8 +61,7 @@ namespace Olympus.Phalanx.Map
 
         void OnMouseUpAsButton()
         {
-            tileClicked(this, 
-                new TileClickEventArgs());
+            tileClicked(new TileClickEventArgs(this, 0));
         }
 
         public void addEffect()

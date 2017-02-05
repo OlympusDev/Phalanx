@@ -34,29 +34,29 @@ namespace Olympus.Phalanx.Controller.States
             }
         }
 
-        public override void tileClick(Tile clickedTile, Map.TileClickEventArgs args)
+        public override void tileClick(TileClickEventArgs args)
         {
-            if (clickedTile.occupant != null)
+            if (args.tile.occupant != null)
             {
-                if (clickedTile.occupant is Entity.Unit)
+                if (args.tile.occupant is Entity.Unit)
                 {
-                    activeUnit = (Entity.Unit)clickedTile.occupant;
+                    activeUnit = (Entity.Unit)args.tile.occupant;
                 }
                 activeTile = null;
                 return;
             }
 
             //Check for move
-            if (clickedTile == activeTile)
+            if (args.tile == activeTile)
             {
                 if (activeUnit != null)
                 {
-                    if (activeUnit.tile[clickedTile]) { 
+                    if (activeUnit.tile[args.tile]) { 
                             activeUnit.tile = activeTile;
                     }
                 }
             }
-            activeTile = clickedTile;
+            activeTile = args.tile;
         }
     }
 }

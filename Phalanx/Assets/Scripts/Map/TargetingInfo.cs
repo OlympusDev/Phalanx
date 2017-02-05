@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace Olympus.Phalanx.Map
 {
-    public class MoveInfo
+    public class TargetingInfo
     {
 
         public int moves { get; private set; }
         public MoveType type { get; private set; }
-        public MoveInfo from { get; private set; }
+        public TargetingInfo from { get; private set; }
         public Tile tile { get; private set; }
 
-        public MoveInfo(int moves, MoveType type,Tile tile)
+        public TargetingInfo(int moves, MoveType type,Tile tile)
         {
             this.moves = moves;
             this.type = type;
@@ -20,7 +20,7 @@ namespace Olympus.Phalanx.Map
             from = this; //If origin
         }
 
-        public MoveInfo(int moves, MoveType type,Tile tile,MoveInfo parent)
+        public TargetingInfo(int moves, MoveType type,Tile tile,TargetingInfo parent)
         {
             this.moves = moves;
             this.type = type;
@@ -28,11 +28,17 @@ namespace Olympus.Phalanx.Map
             from =  parent; //remember who its moving from
         }
 
-        public MoveInfo Move(Tile destination)
+        public TargetingInfo Move(Tile destination)
         {
-            return new MoveInfo(moves - 1, type, destination, this);
+            return Move(destination, 1);
         }
-        public bool better(MoveInfo info)
+
+        public TargetingInfo Move(Tile destination,int moveUsage)
+        {
+            return new TargetingInfo(moves - moveUsage, type, destination, this);
+        }
+
+        public bool better(TargetingInfo info)
         {
             //TODO
             //Comparison
@@ -43,8 +49,11 @@ namespace Olympus.Phalanx.Map
     }
     public enum MoveType
     {
-        Walk = 0x0000,
+        Normal = 0x0000,
         Tank = 0x0001,
-        Attack = 0x0100
+
+        //Combat Targeting
+        Attack = 0x0100,
+        Friendly = 0x0101
     }
 }

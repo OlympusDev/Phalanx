@@ -64,24 +64,16 @@ namespace Olympus.Phalanx.Map
         {
             gameManager = GameManager.instance;
         }
-
-        //Contiguous
-        ICollection<Tile> calculateRange(Tile origin, MoveInfo moves)
-        {
-            Debug.Log("You wish this actually calculated the range");
-            //TODO
-            return null;
-        }
-
-        //Noncontiguous
-        ICollection<Tile> calculateTargets(Tile origin, MoveInfo moves)
+        
+        //Returns the targetable tiles by an action defined by targeting info
+        ICollection<Tile> calculateTargets(TargetingInfo moves)
         {
             Debug.Log("You wish this actually calculated the Targets");
             //TODO
             return null;
         }
 
-        IList<Tile> calculatePath(Tile origin, MoveInfo moves)
+        IList<Tile> calculatePath(Tile start,Tile end)
         {
             Debug.Log("You wish this actually calculated the Path");
             //TODO
@@ -123,9 +115,9 @@ namespace Olympus.Phalanx.Map
 
                     //Hold a reference to the Tile
                     map.Add(current.position, current);
-                    current.tileClicked += (Tile tile, TileClickEventArgs eventArgs) =>
+                    current.tileClicked += (TileClickEventArgs eventArgs) =>
                     {
-                        tileClickEvent(tile, eventArgs);
+                        tileClickEvent(eventArgs);
                     };
 
                     //Link within the row
